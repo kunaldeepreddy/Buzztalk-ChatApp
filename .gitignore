@@ -1,0 +1,9 @@
+# node_modules
+chat-app-frontend/node_modules
+chat-app-backend/node_modules
+# package-lock.json
+chat-app-frontend/package-lock.json
+chat-app-backend/package-lock.json
+
+chat-app-backend/.env
+
