@@ -1,70 +1,171 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# BuzzTalk
 
-## Available Scripts
+A MERN stack and socket IO based chat app that allows users to communicate in real time.
 
-In the project directory, you can run:
 
-### `npm start`
+## Run Locally
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Clone the project
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+  git clone https://github.com/kunaldeepreddy/ChatApp.git
+```
+go to the project directory
 
-### `npm test`
+### Back-end
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+  cd chat-app-backend
+  npm install 
+  npm start
+```
 
-### `npm run build`
+### Front-end
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+  cd chat-app-frontend
+  npm install (if command fails, then retry with `--force` or `--legacy-peer-deps`)
+  npm start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Environment Variables
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+create .env file to back-end root directory and add these variables as listed below .
 
-### `npm run eject`
+`PORT=<Backend_PORT>`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+`MONGO_URI = <mongo_db_url>`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+`JWT_SECRET_KEY=<XXXXXXXXXXXX>`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+`TOKEN_EXPIRY = "365d"`
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+## API Reference
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The backend of the application is built with node js, express js, mongodb and socket io. These technologies are used to create APIs for different functionalities. The application has three main modules: users, messages and chats. Each module has its own controller, model and router.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### User module
+The User Module handles the user data in the system. It can create, activate, deactivate, authenticate, and authorize user accounts. It can also get the users list and search for users. It provides these APIs for user data operations:
 
-### Code Splitting
+#### User Sign Up
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```http
+  POST /api/user/signUp
+```
+This API is used for signing up a new user in the application. It stores the user details in the database and notifies the app admin. The admin can then view the new user in the users list page and activate their account.
 
-### Analyzing the Bundle Size
+#### Account Activation / Deactivation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```http
+  POST /api/user/activateOrDeactivateUser
+```
+This API is designed for app admin only. It allows them to enable or disable the accounts of any other users who are not admin.
 
-### Making a Progressive Web App
+#### Login
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```http
+  POST /api/user/login
+```
+This API is a login service that returns a user token ID for the application. The user token ID is required for making secure API requests later.
 
-### Advanced Configuration
+#### Search Users
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```http
+  GET /api/user/searchUsers?search=${search}
+```
+This API is designed to query users in the application and it returns a list of users excluding the one who is querying.
 
-### Deployment
+#### Get Users
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```http
+  GET /api/user/getAllUsers
+```
+This API is designed to retrieve all the non-app-admin users in the application. only app admins have access to this API.
 
-### `npm run build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Chat module
+
+This module provides backend APIs for various chat functionalities. You can use these APIs to create and manage one-to-one or group chats, as well as to fetch the chat list of a user. You can also rename a group, add or remove members from a group using these APIs.
+
+#### Create/Fetch Chat
+
+```http
+  POST /api/chat/accessChat
+```
+This API allows you to either initiate a new one-to-one chat with a user or retrieve an existing one-to-one chat with a user.
+
+#### Fetch chats
+
+```http
+  GET /api/chat/fetchChats
+```
+This API returns all the chats of a particular user in an array list of objects.
+
+#### Create a chat group
+
+```http
+  POST /api/chat/createGroupChat
+```
+This API is used to create a chat group with at least 3 users. The API takes a list of user IDs and group name as input and returns a group ID as output.
+
+#### Rename a chat group
+
+```http
+  PUT /api/chat/renameGroup
+```
+
+This API allows you to change the name of an existing chat group. The name can only be modified by the group admin.
+
+#### Remove user from a chat group
+
+```http
+  PUT /api/chat/removeFromGroup
+```
+
+This API is used to remove a user from the group. The user can be removed only by the group admin. This action is irreversible and will revoke the user's access to the group resources.
+
+#### Add a user to a chat group.
+
+```http
+  PUT /api/chat/addToGroup
+```
+This API is used to add a user to a chat group. only the group admin can add users to the group.
+
+
+### Message Module
+
+This Module contains backend APIs for various messaging features. You can use them to send messages to one-to-one or group chats, and to add emoji reactions to messages.
+
+#### Send Message
+
+```http
+  POST /api/Message/sendMessage
+```
+This API is used to send messages to one-to-one or group chats.
+
+#### Fetch chat messages
+
+```http
+  GET /api/allMessages/:chatId
+```
+This API is used to fetch messages from one-to-one or group chats.
+
+#### React to Message
+
+```http
+  POST /api/Message/reactToMessage
+```
+This API is used to store details of all reactions to messages in one-to-one and group chat.
+
+
+## Running Tests
+
+To run Jest & Supertest unit tests, run the following command.
+
+```bash
+  cd chat-app-backend
+  npm install (not needed if already installed)
+  npm jest
+```
