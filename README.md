@@ -296,6 +296,6 @@ To run Jest & Supertest unit tests, run the following command.
 
 ```bash
   cd chat-app-backend
-  npm install (not needed if already installed)
+  npm install (ignore if already installed)
   npm jest
 ```
