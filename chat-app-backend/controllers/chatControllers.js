@@ -27,7 +27,7 @@ const accessChat = async (req, res) => {
 
   isChat = await User.populate(isChat, {
     path: "lastMessage.messageSender",
-    select: "name pic email",
+    select: "name email",
   });
 
   if (isChat.length > 0) {
@@ -69,11 +69,12 @@ const fetchChats = async (req, res) => {
       .then(async (results) => {
         results = await User.populate(results, {
           path: "lastMessage.messageSender",
-          select: "name pic email",
+          select: "name email",
         });
         res.status(200).send(results);
       });
   } catch (error) {
+    console.log(error)
     res.status(400).send({
       status: false,
       error: error.message,

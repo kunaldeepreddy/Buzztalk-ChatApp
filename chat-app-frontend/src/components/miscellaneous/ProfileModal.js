@@ -42,11 +42,6 @@ const ProfileModal = ({ user, children }) => {
             alignItems="center"
             justifyContent="space-between"
           >
-            {/* <Image
-              borderRadius="full"
-              boxSize="150px"
-              src={user.pic}
-            /> */}
             <Avatar
                   mt="7px"
                   mr={1}
